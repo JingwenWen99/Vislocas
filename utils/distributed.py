@@ -14,13 +14,8 @@ def all_reduce(tensors, average=True):
     """
     for tensor in tensors:
         dist.all_reduce(tensor, async_op=False)
-        # dist.all_reduce(tensor, op=ReduceOp.SUM)
     if average:
         world_size = dist.get_world_size()
-        # for tensor in tensors:
-        #     tensor.mul_(1.0 / world_size)
-        # for tensor in tensors:
-        #     tensor.float().mul_(1.0 / world_size)
         for index, tensor in enumerate(tensors):
             tensor = tensor / world_size
             tensors[index] = tensor

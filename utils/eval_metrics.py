@@ -52,12 +52,6 @@ def _label_quantity(labels, preds):
 
 
 def cal_label_metrics(tp, fp, tn, fn):
-    # accuracy = np.mean((tp + tn + epsilon) / (tp + fp + tn + fn + epsilon))
-    # precision = np.mean((tp + epsilon) / (tp + fp + epsilon))
-    # recall = np.mean((tp + epsilon) / (tp + fn + epsilon))
-    # f1 = compute_f1(precision, recall)
-    # jaccard = np.mean((tp + epsilon) / (tp + fp + fn + epsilon))
-
     accuracy = np.mean((tp + tn + epsilon) / (tp + fp + tn + fn + epsilon))
     precision = np.mean((tp + epsilon) / (tp + fp + epsilon))
     recall = np.mean((tp + epsilon) / (tp + fn + epsilon))
@@ -81,12 +75,6 @@ def label_micro_metrics(quantity):
 
 def every_label_metrics(quantity):
     tp, fp, tn, fn = quantity
-
-    # accuracy = (tp + tn + epsilon) / (tp + fp + tn + fn + epsilon)
-    # precision = (tp + epsilon) / (tp + fp + epsilon)
-    # recall = (tp + epsilon) / (tp + fn + epsilon)
-    # f1 = compute_f1(precision, recall)
-    # jaccard = (tp + epsilon) / (tp + fp + fn + epsilon)
 
     accuracy = (tp + tn + epsilon) / (tp + fp + tn + fn + epsilon)
     precision = (tp + epsilon) / (tp + fp + epsilon)
@@ -236,12 +224,6 @@ def cal_metrics(cfg, labels, preds, writer=None, cur_epoch=None, locations=None,
         writer.add_scalar(tag="label_micro/f1", scalar_value=lab_f1_micro, global_step=cur_epoch)
         writer.add_scalar(tag="label_micro/jaccard", scalar_value=lab_jaccard_micro, global_step=cur_epoch)
 
-        # locations = ['actin filaments', 'centrosome',
-        #     'cytosol', 'endoplasmic reticulum', 'golgi apparatus', 'intermediate filaments',
-        #     'microtubules', 'mitochondria', 'nuclear membrane', 'nucleoli', 'nucleoplasm',
-        #     'plasma membrane', 'vesicles']
-        # if locations == None:
-        #     locations = cfg.CLASSIFIER.LOCATIONS
         for i in range(len(locations)):
             writer.add_scalar(tag="{}/accuracy".format(locations[i]), scalar_value=lab_acc[i], global_step=cur_epoch)
             writer.add_scalar(tag="{}/precision".format(locations[i]), scalar_value=lab_precision[i], global_step=cur_epoch)
@@ -270,37 +252,11 @@ def cal_metrics(cfg, labels, preds, writer=None, cur_epoch=None, locations=None,
 
     return quantity
 
-        # writer.add_scalar(tag="metrics/example_subset_accuracy", scalar_value=ex_subset_acc, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/example_accuracy", scalar_value=ex_acc, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/example_precision", scalar_value=ex_precision, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/example_recall", scalar_value=ex_recall, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/example_f1", scalar_value=ex_f1, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/example_hamming_loss", scalar_value=ex_hamming_loss, global_step=cur_epoch)
 
-        # writer.add_scalar(tag="metrics/label_accuracy_macro", scalar_value=lab_acc_macro, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/label_precision_macro", scalar_value=lab_precision_macro, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/label_recall_macro", scalar_value=lab_recall_macro, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/label_f1_macro", scalar_value=lab_f1_macro, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/label_jaccard_macro", scalar_value=lab_jaccard_macro, global_step=cur_epoch)
-
-        # writer.add_scalar(tag="metrics/label_accuracy_micro", scalar_value=lab_acc_micro, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/label_precision_micro", scalar_value=lab_precision_micro, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/label_recall_micro", scalar_value=lab_recall_micro, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/label_f1_micro", scalar_value=lab_f1_micro, global_step=cur_epoch)
-        # writer.add_scalar(tag="metrics/label_jaccard_micro", scalar_value=lab_jaccard_micro, global_step=cur_epoch)
-
-# [0.5, 0.125, 0.125, 0.125, 0.1, 0.15, 0.15, 0.75, 0.125, 0.125]
-# def get_curve(cfg, labels, preds, optimal_func="f_beta", beta=[0.8, 0.5, 0.5, 0.5, 1, 0.5], writer=None, locations=None):
 def get_curve(cfg, labels, preds, optimal_func="f_beta", beta=[0.5 for i in range(10)], writer=None, locations=None):
-# def get_curve(cfg, labels, preds, optimal_func="f_beta", beta=[0.25 for i in range(10)], writer=None):
-    # locations = ['actin filaments', 'centrosome',
-    #     'cytosol', 'endoplasmic reticulum', 'golgi apparatus', 'intermediate filaments',
-    #     'microtubules', 'mitochondria', 'nuclear membrane', 'nucleoli', 'nucleoplasm',
-    #     'plasma membrane', 'vesicles']
     if locations == None:
         locations = cfg.CLASSIFIER.LOCATIONS
     optimal_thres = []
-    # fig, ax = plt.subplots(1, len(locations))
     for i in range(len(locations)):
         fpr, tpr, thres = roc_curve(labels[:, i], preds[:, i])
         fig, ax = plt.subplots()
@@ -312,35 +268,6 @@ def get_curve(cfg, labels, preds, optimal_func="f_beta", beta=[0.5 for i in rang
 
         if writer:
             writer.add_figure(tag="roc_curve/{}".format(locations[i]), figure=fig, global_step=1)
-# ————————————————
-# 版权声明：本文为CSDN博主「胖胖大海」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-# 原文链接：https://blog.csdn.net/cxx654/article/details/116069364
-
-#         # ax[i].plot(fpr, tpr, label="AUC: {:.2f}".format(auc(fpr, tpr)))
-#         # ax[i].set_xlabel("FPR")
-#         # ax[i].set_ylabel("TPR")
-#         # ax[i].set_title(locations[i])
-#         # ax[i].legend(loc="lower right")
-
-
-#         # svc_roc = plot_roc_curve(svc_clf, X_test, y_test, ax=ax)
-#         lr_clf_roc = plot_roc_curve(lr_clf, X_test, y_test, ax=ax)
-#         dt_clf_roc = plot_roc_curve(dt_clf, X_test, y_test, ax=ax)
-#         # knn_clf_roc = plot_roc_curve(knn_clf, X_test, y_test, ax=ax)
-
-#         # 参照线
-#         ax.plot([0, 1], [0, 1], linestyle='--', color='r')
-
-
-
-#         roc_auc = auc(fpr, tpr)
-#         # print("len(fpr):", len(fpr))
-#         for j in range(len(fpr)):
-#             # print(tpr[j], fpr[j])
-#             # import time
-#             # time.sleep(1)
-#             writer.add_scalar(tag="roc_curve/{}".format(locations[i]), scalar_value=tpr[j], global_step=fpr[j])
-#         print("auc of {}: {}".format(locations[i], roc_auc))
 
         if beta[i] == -1:
             optimal_thres.append(0.5)
@@ -350,12 +277,6 @@ def get_curve(cfg, labels, preds, optimal_func="f_beta", beta=[0.5 for i in rang
             f_beta_idx = np.argmax(f_beta)
             optimal_threshold = thresholds[f_beta_idx]
             optimal_thres.append(optimal_threshold)
-
-
-        # y = tpr - fpr
-        # youden_index = np.argmax(y)
-        # optimal_threshold = thres[youden_index]
-        # optimal_thres.append(optimal_threshold)
 
         if writer:
             writer.add_pr_curve("pr_curve/{}".format(locations[i]), labels[:, i], preds[:, i], 0)
@@ -367,7 +288,6 @@ def get_curve(cfg, labels, preds, optimal_func="f_beta", beta=[0.5 for i in rang
 def evaluate(cfg, all_idxs, all_labels, all_preds, data_file, model_name, result_prefix=None, log_prefix=None, metricsWriter=None, cur_epoch=-1,
         get_threshold=False, threshold=0.5, multilabel=True, prefix="", beta=[0.5 for i in range(10)], csvWriter=None, randomSplit=-1, fold=0, aug=0, thresh='', split='', getSPE=False, getAuc=False, getMcc=False):
     locations = cfg.CLASSIFIER.LOCATIONS
-    # labels = labelLists.get(result_prefix.rsplit("/", 2)[1], locations)
     labels = labelLists.get(log_prefix.rsplit("/", 2)[0], locations)
     locations_pred = [i + '_pred' for i in labels]
     locations_pred_labels = [i + '_pred_labels' for i in labels]
@@ -399,9 +319,5 @@ def evaluate(cfg, all_idxs, all_labels, all_preds, data_file, model_name, result
     if cur_epoch != -1:
         predData.to_csv("{}/{}/preds/{}{}_{}".format(result_prefix, model_name, prefix, (cur_epoch + 1), data_file.split('/')[-1]), index=True, mode='w')
     predData.to_csv("{}/{}/preds/{}test_{}_aug{}_{}".format(result_prefix, model_name, prefix, thresh, aug, data_file.split('/')[-1]), index=True, mode='w')
-    # elif aug > 0:
-    #     predData.to_csv("{}/{}/preds/{}test_{}_aug{}_{}".format(result_prefix, model_name, prefix, thresh, aug, data_file.split('/')[-1]), index=True, mode='w')
-    # else:
-    #     predData.to_csv("{}/{}/preds/{}test_{}_{}".format(result_prefix, model_name, prefix, thresh, data_file.split('/')[-1]), index=True, mode='w')
 
     return threshold

@@ -24,7 +24,7 @@ def construct_scheduler(
             gamma=gamma,
             last_epoch=last_epoch
         )
-    elif scheduler_name == "exponential": # 指数衰减
+    elif scheduler_name == "exponential": # exponential decay
         return torch.optim.lr_scheduler.ExponentialLR(
             optimizer,
             gamma=gamma,
@@ -78,15 +78,6 @@ def construct_scheduler(
         lr_lambda = lambda cur_epoch: (0.99 * cur_epoch / cfg.T0 + cfg.END_SCALE) if cur_epoch < cfg.T0 else \
             cfg.END_SCALE if cfg.GAMMA ** (cur_epoch - cfg.T0) < cfg.END_SCALE else \
             cfg.GAMMA ** (cur_epoch - cfg.T0)
-            # cfg.END_SCALE if cfg.GAMMA ** ((cur_epoch - cfg.T0) // cfg.T1) < cfg.END_SCALE else \
-            # cfg.GAMMA ** ((cur_epoch - cfg.T0) // cfg.T1)
-            # cfg.END_SCALE if cfg.GAMMA ** (cur_epoch // cfg.T0 - 1) < cfg.END_SCALE else \
-            # cfg.GAMMA ** (cur_epoch // cfg.T0 - 1)
-            # cfg.END_SCALE if cfg.GAMMA ** (cur_epoch - cfg.T0) < cfg.END_SCALE else \
-            # cfg.GAMMA ** (cur_epoch - cfg.T0)
-            # 1 if cur_epoch < cfg.T0 * 2 else \
-            # cfg.END_SCALE if cfg.GAMMA ** (cur_epoch - cfg.T0 * 2) < cfg.END_SCALE else \
-            # cfg.GAMMA ** (cur_epoch - cfg.T0 * 2)
 
         return torch.optim.lr_scheduler.LambdaLR(
             optimizer,
@@ -94,16 +85,6 @@ def construct_scheduler(
             last_epoch=last_epoch
         )
 
-
-
-        # scheduler = construct_scheduler(cfg, optimizer, "lambda", lr_lambda=lambda2)
-        # return  torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-        #     optimizer,
-        #     T_0=T_0,
-        #     T_mult=T_mult,
-        #     eta_min=eta_min,
-        #     last_epoch=last_epoch,
-        #     verbose=verbose)
     else:
         raise NotImplementedError(
             "Does not support {} scheduler".format(scheduler_name)

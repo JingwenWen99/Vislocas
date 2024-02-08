@@ -43,30 +43,7 @@ if __name__ == '__main__':
     badImage = "D:\\VSCode\\ProteinLocalization\data\\bad.jpg"
     sz = os.path.getsize(badImage)
 
-    # downloadImage = findDownload()
-    # # downloadImage = readDownload("data/downloadImage.csv")
-    # allData = readData("data/location.csv")
-
-    # undownload = []
-    # cnt = 0
-    # for item in allData:
-    #     if item not in downloadImage:
-    #         undownload.append(item)
-    #         with open("data/undownload.csv", "a", encoding="utf-8", newline="") as f:
-    #             writer = csv.writer(f)
-    #             writer.writerow(item)
-    #     cnt += 1
-    #     if cnt % 100 == 0:
-    #         print("DONE:    ", cnt)
-
-    # print("ALL DATA: ", len(allData))
-    # print("DOWNLOAD DATA: ", len(downloadImage))
-    # print("UNDOWNLOAD DATA: ", len(undownload))
-
-    # downloadImage = findDownload()
-    # downloadImage = readDownload("data/downloadImage.csv")
-    allData = readDownload("data/url.csv")
-
+    allData = readData("data/location.csv")
     undownload = 0
     cnt = 0
     for item in allData:

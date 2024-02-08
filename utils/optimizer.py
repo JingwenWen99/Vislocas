@@ -10,23 +10,23 @@ def construct_optimizer(params, optimizer_name,
     """_summary_
 
     Args:
-        params (_type_): 需要优化的网络参数
-        optimizer_name (_type_): 使用的优化器名称
-        lr (float, optional): 学习率. Defaults to 3e-04.
-        momentum (float, optional): 动量因子. Defaults to 0.9.
-        dampening (int, optional): 动量的抑制因子. Defaults to 0.
-        weight_decay (float, optional): 权重衰减（L2惩罚）. Defaults to 0.05.
-        nesterov (bool, optional): 使用Nesterov动量. Defaults to True.
-        lr_decay (int, optional): 学习率衰减. Defaults to 0.
-        rho (float, optional): 用于计算平方梯度的运行平均值的系数. Defaults to 0.9.
-        eps (_type_, optional): 为了增加数值计算的稳定性而加到分母里的项. Defaults to 1e-08.
-        alpha (float, optional): 平滑常数. Defaults to 0.99.
-        centered (bool, optional): 如果为True，计算中心化的RMSProp，并且用它的方差预测值对梯度进行归一化. Defaults to False.
-        betas (tuple, optional): 用于计算梯度以及梯度平方的运行平均值的系数. Defaults to (0.9, 0.999).
-        amsgrad (bool, optional): 是否使用从论文On the Convergence of Adam and Beyond中提到的算法的AMSGrad变体. Defaults to False.
+        params (_type_): Network parameters to be optimised
+        optimizer_name (_type_): Name of the optimiser used
+        lr (float, optional): learning rate. Defaults to 3e-04.
+        momentum (float, optional): momentum factor. Defaults to 0.9.
+        dampening (int, optional): Suppressor of Momentum. Defaults to 0.
+        weight_decay (float, optional): Weight decay (L2 penalty). Defaults to 0.05.
+        nesterov (bool, optional): Using Nesterov momentum. Defaults to True.
+        lr_decay (int, optional): Learning rate decay. Defaults to 0.
+        rho (float, optional): Coefficients used to calculate the running mean of the squared gradient. Defaults to 0.9.
+        eps (_type_, optional): Terms added to the denominator to increase the stability of numerical calculations. Defaults to 1e-08.
+        alpha (float, optional): smoothness constant. Defaults to 0.99.
+        centered (bool, optional): If True, compute the centred RMSProp and normalise the gradient with its variance prediction value. Defaults to False.
+        betas (tuple, optional): Coefficients used to calculate the gradient and the running average of the gradient squared. Defaults to (0.9, 0.999).
+        amsgrad (bool, optional): Whether or not to use the AMSGrad variant of the algorithm mentioned in the paper On the Convergence of Adam and Beyond. Defaults to False.
 
     Raises:
-        NotImplementedError: 不支持的优化器名称
+        NotImplementedError: Unsupported optimiser names
 
     Returns:
         _type_: optimizer
@@ -59,7 +59,7 @@ def construct_optimizer(params, optimizer_name,
     elif optimizer_name == "adadelta":
         return torch.optim.Adadelta(
             params,
-            lr=1.0, # 在delta被应用到参数更新之前对它缩放的系数
+            lr=1.0, # The factor by which delta is scaled before it is applied to the parameter update
             rho=rho,
             eps=eps,
             weight_decay=weight_decay

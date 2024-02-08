@@ -28,7 +28,6 @@ def saveImage(data):
     T1 = time.time()
     proteinId, antibodyId, organ, url = data[0], data[1], data[2], data[3]
     root = "data/image/" + proteinId + "/" + organ + "/" + antibodyId + "/"
-    # root = "data/img/"
     path = root + url.split('/')[-1]
 
     requests.adapters.DEFAULT_RETRIES = 3
@@ -39,11 +38,8 @@ def saveImage(data):
     while True:
         try:
             r = s.get(url, timeout=2)
-            # r = s.get(url, timeout=(10, 15))
-            # r.raise_for_status()
             if r.status_code != 200:
                 raise Exception
-        # except requests.RequestException as e:
         except:
             cnt += 1
             time.sleep(0.5)
@@ -64,7 +60,6 @@ def saveImage(data):
             lock.release()
             with open(path, "wb") as f:
                 f.write(r.content)
-                # print(path + "保存成功！")
             break
     T2 = time.time()
     print("运行时间:%s秒" % (T2 - T1))
@@ -77,14 +72,10 @@ def init_lock(l):
 if __name__ == '__main__':
     T1 = time.time()
     l = Lock()
-    # P = Pool(processes = cpu_count())
     P = Pool(processes = 20, initializer=init_lock, initargs=(l, ))
     T2 = time.time()
     print("进程池创建!    运行时间:%s秒" % (T2 - T1))
-    # data = readData("data/location.csv")
     data = readFromUrl("data/url_10.csv")
-    # data = readFromBadUrl("data/undownload_9.csv")
-    # print(len(data))
 
     P.map(func=saveImage, iterable=data)
     P.close()
