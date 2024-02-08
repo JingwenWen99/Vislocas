@@ -116,6 +116,10 @@ The following files should be placed directly in the `data/cancer` directory.
     > This file includes the optimizer code.
 * scheduler.py
     > This file includes the scheduler code.
+### 2.7 logs
+> This folder is used to store the output log messages.
+### 2.8 results
+> This folder is used to store the output models and prediction results.
 ## 3. How to run
 The program is written in Python 3.8.15 and to run the code we provide, you need to install the environment.yml through inputting the following command in command line mode:
 `conda env create -f environment.yml`
