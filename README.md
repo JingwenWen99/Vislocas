@@ -35,17 +35,17 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
 ### 2.2 prepareData
 > This folder stores the code files for data preparing.
   #### 2.2.1 IF
-  > This folder stores the code files used to analyse and process the IF labels. 
+    > This folder stores the code files used to analyse and process the IF labels. 
   #### 2.2.2 IHC
-  > This folder stores the code files used to analyse, process and download the IHC data. 
+    > This folder stores the code files used to analyse, process and download the IHC data. 
   #### 2.2.3 pathology
-  > This folder stores the code files used to analyse, process and download the pathology data. 
+    > This folder stores the code files used to analyse, process and download the pathology data. 
   #### 2.2.4 GraphLoc
-  > This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
+    > This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
   #### 2.2.5 MSTLoc
-  > This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
+    > This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
   #### 2.2.6 laceDNN
-  > This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
+    > This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
 ### 2.3 data
 > Download and save the data annotation information to this folder.
 ### 2.4 models
