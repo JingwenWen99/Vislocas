@@ -32,3 +32,23 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
     > This file includes building dataset code.
 * loader.py
     > This file includes constructing loader code.
+### 2.2 prepareData
+> This folder stores the code files for data preparing.
+  #### 2.2.1 IF
+    > This folder stores the code files used to analyse and process the IF labels. 
+  #### 2.2.2 IHC
+    > This folder stores the code files used to analyse, process and download the IHC data. 
+  #### 2.2.3 GraphLoc
+    > This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
+  #### 2.2.4 MSTLoc
+    > This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
+  #### 2.2.5 laceDNN
+    > This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
+### 2.3 data
+> Download and save the data annotation information to this folder.
+### 2.4 models
+> This folder stores model-related code files, including Visloacas model code, loss function code, and model training-related code.
+### 2.5 tools
+> This folder stores code files for model training, prediction, biomarker prediction, etc.
+### 2.6 utils
+> This folder stores the optimiser, scheduler, checkpoint and other utilities code files.
