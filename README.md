@@ -35,20 +35,56 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
 ### 2.2 prepareData
 > This folder stores the code files for data preparing.
   #### 2.2.1 IF
-    > This folder stores the code files used to analyse and process the IF labels. 
+  > This folder stores the code files used to analyse and process the IF labels. 
   #### 2.2.2 IHC
-    > This folder stores the code files used to analyse, process and download the IHC data. 
-  #### 2.2.3 GraphLoc
-    > This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
-  #### 2.2.4 MSTLoc
-    > This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
-  #### 2.2.5 laceDNN
-    > This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
+  > This folder stores the code files used to analyse, process and download the IHC data. 
+  #### 2.2.3 pathology
+  > This folder stores the code files used to analyse, process and download the pathology data. 
+  #### 2.2.4 GraphLoc
+  > This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
+  #### 2.2.5 MSTLoc
+  > This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
+  #### 2.2.6 laceDNN
+  > This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
 ### 2.3 data
 > Download and save the data annotation information to this folder.
 ### 2.4 models
 > This folder stores model-related code files, including Visloacas model code, loss function code, and model training-related code.
+* cvr_utils
+    > This folder stores convolutional tokenizer and transformer encoder module code.
+* cct.py
+    > This file includes Visloacas model code.
+* classifier_model.py
+    > This file includes load model code.
+* train_classifier.py
+    > This file includes model training-related code.
+* loss.py
+    > This file includes loss function code.
+* criterion.py
+    > This file includes criterion-related code.
 ### 2.5 tools
 > This folder stores code files for model training, prediction, biomarker prediction, etc.
+* train.py
+    > This file includes model training code.
+* test.py
+    > This file includes model testing code.
+* multi-instance.py
+    > This file includes the code that aggregates the image-level results into protein-level results.
+* cancerTest.py
+    > This file includes the codes for screening biomarkers of cancer subtypes.
+* cal_metrics.py
+    > This file includes the code that calculates the performance metrics.
 ### 2.6 utils
 > This folder stores the optimiser, scheduler, checkpoint and other utilities code files.
+* checkpoint.py
+    > This file includes checkpoint code.
+* config_defaults.py
+    > This file includes the parameter configuration code.
+* distributed.py
+    > This file includes the code for distributed training.
+* eval_metrics.py
+    > This file includes the utilities code for calculating the performance metrics.
+* optimizer.py
+    > This file includes the optimizer code.
+* scheduler.py
+    > This file includes the scheduler code.
