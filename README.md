@@ -50,17 +50,17 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
 > Download and save the data annotation information to this folder.
 ### 2.4 models
 > This folder stores model-related code files, including Visloacas model code, loss function code, and model training-related code.
-* cvr_utils
+  * cvr_utils
     > This folder stores convolutional tokenizer and transformer encoder module code.
-* cct.py
+  * cct.py
     > This file includes Visloacas model code.
-* classifier_model.py
+  * classifier_model.py
     > This file includes load model code.
-* train_classifier.py
+  * train_classifier.py
     > This file includes model training-related code.
-* loss.py
+  * loss.py
     > This file includes loss function code.
-* criterion.py
+  * criterion.py
     > This file includes criterion-related code.
 ### 2.5 tools
 > This folder stores code files for model training, prediction, biomarker prediction, etc.
