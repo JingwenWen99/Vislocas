@@ -19,7 +19,8 @@ _C.DATA.DATASET = "IHC"
 _C.DATA.DATASET_NAME = ["IHC"]
 # _C.DATA.DATASET_NAME = ["IHC", "GraphLoc", "MSTLoc", "laceDNN"]
 _C.DATA.PATH_TO_DATA_DIR = "/root/autodl-tmp/dataset"
-_C.DATA.RESULT_DIR = "/root/autodl-tmp"
+_C.DATA.RESULT_DIR = "."
+# _C.DATA.RESULT_DIR = "/root/autodl-tmp"
 
 _C.DATA.MEAN = [0.485, 0.456, 0.406]  # The mean value of pixels across the R G B channels.
 _C.DATA.STD = [0.229, 0.224, 0.225]  # The std value of pixels across the R G B channels.
