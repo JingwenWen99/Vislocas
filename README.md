@@ -35,17 +35,17 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
 ### 2.2 prepareData
 > This folder stores the code files for data preparing.
   #### 2.2.1 IF
-  >> This folder stores the code files used to analyse and process the IF labels. 
+  > This folder stores the code files used to analyse and process the IF labels. 
   #### 2.2.2 IHC
-  >> This folder stores the code files used to analyse, process and download the IHC data. 
+  > This folder stores the code files used to analyse, process and download the IHC data. 
   #### 2.2.3 pathology
-  >> This folder stores the code files used to analyse, process and download the pathology data. 
+  > This folder stores the code files used to analyse, process and download the pathology data. 
   #### 2.2.4 GraphLoc
-  >> This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
+  > This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
   #### 2.2.5 MSTLoc
-  >> This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
+  > This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
   #### 2.2.6 laceDNN
-  >> This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
+  > This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
 ### 2.3 data
 > Download and save the data annotation information to this folder.
 ### 2.4 models
@@ -88,3 +88,11 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
     > This file includes the optimizer code.
 * scheduler.py
     > This file includes the scheduler code.
+## 3. How to run
+The program is written in Python 3.8.15 and to run the code we provide, you need to install the environment.yml through inputting the following command in command line mode:
+`conda env create -f environment.yml`
+1. Run `python -m torch.distributed.launch --nproc_per_node=6 tools/train.py` in the terminal to train the Vislocas model.
+2. Run `python -m torch.distributed.launch --nproc_per_node=6 tools/test.py` in the terminal to test the Vislocas model.
+3. Run `python tools/multi-instance.py` in the terminal to aggregates the image-level results into protein-level results.
+4. Run `python tools/cal_metrics.py` in the terminal to calculates the performance metrics.
+5. Run `python -m torch.distributed.launch --nproc_per_node=6 tools/cancerTest.py` in the terminal to screen biomarkers of cancer subtypes.
