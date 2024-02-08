@@ -34,20 +34,21 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
     > This file includes constructing loader code.
 ### 2.2 prepareData
 > This folder stores the code files for data preparing.
-  #### 2.2.1 IF
++ IF
   > This folder stores the code files used to analyse and process the IF labels. 
-  #### 2.2.2 IHC
++ IHC
   > This folder stores the code files used to analyse, process and download the IHC data. 
-  #### 2.2.3 pathology
++ pathology
   > This folder stores the code files used to analyse, process and download the pathology data. 
-  #### 2.2.4 GraphLoc
++ GraphLoc
   > This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
-  #### 2.2.5 MSTLoc
++ MSTLoc
   > This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
-  #### 2.2.6 laceDNN
++ laceDNN
   > This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
 ### 2.3 data
-> Download and save the data annotation information to this folder.
+> Download and save the data annotation information to this folder.  
+> All benchmark data has been deposited at Zenode [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
 ### 2.4 models
 > This folder stores model-related code files, including Visloacas model code, loss function code, and model training-related code.
   * cvr_utils
