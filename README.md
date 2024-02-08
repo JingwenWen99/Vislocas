@@ -1,1 +1,2 @@
 # Vislocas
+In this work, we developed Vislocas, which identifies potential protein mis-localization events from IHC images, to mark different cancer subtypes. Vislocas combines CNN and vision transformer to capture IHC image features at both global and local levels. Vislocas can be trained from scratch to create an end-to-end system that can identify protein subcellular localizations directly from IHC images.
