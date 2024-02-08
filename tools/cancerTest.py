@@ -27,7 +27,6 @@ cancerList = ["Glioma", "Melanoma", "SkinCancer"]
 subtypesList = {"Glioma": ["normal", "highGrade", "lowGrade"],
                 "Melanoma": ["normal", "NOS", "MetastaticSite"],
                 "SkinCancer": ["normal", "BCC", "SCC"]}
-location_num = [153, 69, 58, 294, 39]
 
 
 def getPredictResult(classifier_model, database, cancer_dir):
@@ -165,30 +164,13 @@ def getProteinLevelLabel(resultData, labels, func="integrate", getGroundTruth=Fa
         predProteinLabel = groupData[locations_pred_labels].max()
         predProtein = predProteinLabel.rename(locations_pred)
 
-    # original_locations_pred = ['original_' + i + '_pred' for i in labels]
-    # original_locations_pred_labels = ['original_' + i + '_pred_labels' for i in labels]
-
-    # originalPred = predProtein.copy()
-    # originalPred.columns = original_locations_pred
-    # originalPredLabel = predProteinLabel.copy()
-    # originalPredLabel.columns = original_locations_pred_labels
-
-    # max_num = max(location_num)
-    # for i in range(len(labels)):
-    #     ratio = np.log10(max_num / location_num[i]) + 1
-    #     predProtein[locations_pred[i]] = predProtein[locations_pred[i]] * ratio
-
     all_pred_labels = t_criterion(np.array(predProtein[locations_pred]), threshold)
     predProteinLabel[locations_pred_labels] = all_pred_labels
 
     if getGroundTruth:
         cal_metrics(None, np.array(proteinLabel), np.array(predProteinLabel), None, -1, locations=labels, csvWriter=None, fold=None, thresh="", split=None)
 
-    # return proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
     predData = pd.merge(predProtein, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     if proteinLabel is not None:
         predData = pd.merge(proteinLabel, predData, how='left', left_index=True, right_index=True)
     print(predData)
@@ -198,52 +180,33 @@ def getProteinLevelLabel(resultData, labels, func="integrate", getGroundTruth=Fa
 
 def getGliomaResult(result_prefix=None, model_name=None, func=None, labels=None, threshold=0.5):
     normalData = pd.read_csv("{}/{}/preds/test_t=0.5_aug0_normalGlioma.csv".format(result_prefix, model_name), header=0, index_col=0)
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(normalData, labels, func=func, getGroundTruth=True, threshold=threshold)
     predData = getProteinLevelLabel(normalData, labels, func=func, getGroundTruth=True, threshold=threshold)
 
     proteins = normalData[['Protein Name', 'Protein Id']].drop_duplicates().reset_index(drop=True).reset_index()
     print(proteins)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protNormalGlioma.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
 
     pathologyData = pd.read_csv("{}/{}/preds/test_t=0.5_aug0_pathologyGlioma.csv".format(result_prefix, model_name), header=0, index_col=0)
 
-
     highGradeData = pathologyData[pathologyData[['Glioma, malignant, High grade', 'Glioblastoma, NOS']].sum(axis=1) > 0]
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(highGradeData, labels, func=func, getGroundTruth=False, threshold=threshold)
     predData = getProteinLevelLabel(highGradeData, labels, func=func, getGroundTruth=False, threshold=threshold)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protHighGradeGlioma.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
 
     lowGradeData = pathologyData[pathologyData['Glioma, malignant, Low grade'] == 1]
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(lowGradeData, labels, func=func, getGroundTruth=False, threshold=threshold)
     predData = getProteinLevelLabel(lowGradeData, labels, func=func, getGroundTruth=False, threshold=threshold)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protLowGradeGlioma.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
@@ -251,104 +214,65 @@ def getGliomaResult(result_prefix=None, model_name=None, func=None, labels=None,
 
 def getMelanomaResult(result_prefix=None, model_name=None, func=None, labels=None, threshold=0.5):
     normalData = pd.read_csv("{}/{}/preds/test_t=0.5_aug0_normalMelanoma.csv".format(result_prefix, model_name), header=0, index_col=0)
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(normalData, labels, func=func, getGroundTruth=True, threshold=threshold)
     predData = getProteinLevelLabel(normalData, labels, func=func, getGroundTruth=True, threshold=threshold)
 
     proteins = normalData[['Protein Name', 'Protein Id']].drop_duplicates().reset_index(drop=True).reset_index()
     print(proteins)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
+
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protNormalMelanoma.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
-
     pathologyData = pd.read_csv("{}/{}/preds/test_t=0.5_aug0_pathologyMelanoma.csv".format(result_prefix, model_name), header=0, index_col=0)
 
-
     NOSData = pathologyData[pathologyData['Malignant melanoma, NOS'] == 1]
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(NOSData, labels, func=func, getGroundTruth=False, threshold=threshold)
     predData = getProteinLevelLabel(NOSData, labels, func=func, getGroundTruth=False, threshold=threshold)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protNOSMelanoma.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
 
     MetastaticSiteData = pathologyData[pathologyData['Malignant melanoma, Metastatic site'] == 1]
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(MetastaticSiteData, labels, func=func, getGroundTruth=False, threshold=threshold)
     predData = getProteinLevelLabel(MetastaticSiteData, labels, func=func, getGroundTruth=False, threshold=threshold)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protMetastaticSiteMelanoma.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
 
 def getSkinCancerResult(result_prefix=None, model_name=None, func=None, labels=None, threshold=0.5):
     normalData = pd.read_csv("{}/{}/preds/test_t=0.5_aug0_normalSkinCancer.csv".format(result_prefix, model_name), header=0, index_col=0)
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(normalData, labels, func=func, getGroundTruth=True, threshold=threshold)
     predData = getProteinLevelLabel(normalData, labels, func=func, getGroundTruth=True, threshold=threshold)
 
     proteins = normalData[['Protein Name', 'Protein Id']].drop_duplicates().reset_index(drop=True).reset_index()
     print(proteins)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protNormalSkinCancer.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
-
     pathologyData = pd.read_csv("{}/{}/preds/test_t=0.5_aug0_pathologySkinCancer.csv".format(result_prefix, model_name), header=0, index_col=0)
 
-
     BCCData = pathologyData[pathologyData[['Basal cell carcinoma', 'BCC, low aggressive', 'BCC, high aggressive']].sum(axis=1) > 0]
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(BCCData, labels, func=func, getGroundTruth=False, threshold=threshold)
     predData = getProteinLevelLabel(BCCData, labels, func=func, getGroundTruth=False, threshold=threshold)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protBCCSkinCancer.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
 
     SCCData = pathologyData[pathologyData[['Squamous cell carcinoma, NOS', 'Squamous cell carcinoma in situ, NOS', 'Squamous cell carcinoma, metastatic, NOS']].sum(axis=1) > 0]
-    # proteinLabel, predProtein, predProteinLabel, originalPred, originalPredLabel = getProteinLevelLabel(SCCData, labels, func=func, getGroundTruth=False, threshold=threshold)
     predData = getProteinLevelLabel(SCCData, labels, func=func, getGroundTruth=False, threshold=threshold)
 
-    # predData = pd.merge(proteinLabel, predProtein, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, predProteinLabel, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPred, how='left', left_index=True, right_index=True)
-    # predData = pd.merge(predData, originalPredLabel, how='left', left_index=True, right_index=True)
     predData = pd.merge(proteins, predData, on='Protein Id', how='right').set_index('index')
     predData.columns = predData.columns.tolist()
-    # predData.reset_index(inplace=True)
     print(predData)
     predData.to_csv("{}/{}/preds/{}_protSCCSkinCancer.csv".format(result_prefix, model_name, func), index=True, mode='w')
 
@@ -379,8 +303,6 @@ def getTransProt(proteins, df_A, df_B, labels, col_name):
 
 
 def filterGliomaTransProt(result_prefix=None, model_name=None, func=None, labels=None):
-    # locations_pred_labels = [i + '_pred_labels' for i in labels]
-
     normalData = pd.read_csv("{}/{}/preds/{}_protNormalGlioma.csv".format(result_prefix, model_name, func), header=0, index_col=0)
     highGradeData = pd.read_csv("{}/{}/preds/{}_protHighGradeGlioma.csv".format(result_prefix, model_name, func), header=0, index_col=0)
     lowGradeData = pd.read_csv("{}/{}/preds/{}_protLowGradeGlioma.csv".format(result_prefix, model_name, func), header=0, index_col=0)
@@ -397,8 +319,6 @@ def filterGliomaTransProt(result_prefix=None, model_name=None, func=None, labels
 
 
 def filterMelanomaTransProt(result_prefix=None, model_name=None, func=None, labels=None):
-    # locations_pred_labels = [i + '_pred_labels' for i in labels]
-
     normalData = pd.read_csv("{}/{}/preds/{}_protNormalMelanoma.csv".format(result_prefix, model_name, func), header=0, index_col=0)
     NOSData = pd.read_csv("{}/{}/preds/{}_protNOSMelanoma.csv".format(result_prefix, model_name, func), header=0, index_col=0)
     MetastaticSiteData = pd.read_csv("{}/{}/preds/{}_protMetastaticSiteMelanoma.csv".format(result_prefix, model_name, func), header=0, index_col=0)
@@ -415,8 +335,6 @@ def filterMelanomaTransProt(result_prefix=None, model_name=None, func=None, labe
 
 
 def filterSkinCancerTransProt(result_prefix=None, model_name=None, func=None, labels=None):
-    # locations_pred_labels = [i + '_pred_labels' for i in labels]
-
     normalData = pd.read_csv("{}/{}/preds/{}_protNormalSkinCancer.csv".format(result_prefix, model_name, func), header=0, index_col=0)
     BCCData = pd.read_csv("{}/{}/preds/{}_protBCCSkinCancer.csv".format(result_prefix, model_name, func), header=0, index_col=0)
     SCCData = pd.read_csv("{}/{}/preds/{}_protSCCSkinCancer.csv".format(result_prefix, model_name, func), header=0, index_col=0)
@@ -455,27 +373,15 @@ def Ttest(proteins, df_A, df_B, labels, col_name):
     for prot in proteinList:
         data_A = df_A[df_A['Protein Id'] == prot]
         data_B = df_B[df_B['Protein Id'] == prot]
-        # print(data_A)
-        # print(data_B)
 
         for loc in labels:
             A = data_A[loc + '_pred']
             B = data_B[loc + '_pred']
-            # print(A, B)
 
-            # levene_statistic, levene_pvalue = stats.levene(B, A) # 检验方差齐性
-            # if levene_pvalue > 0.05:
-            #     equal_var = True
-            # else:
-            #     equal_var = False
-            # # print(levene_statistic, levene_pvalue, equal_var)
-            # # T_statistic, T_pvalue = stats.ttest_ind(B, A, equal_var=equal_var)
             T_statistic, T_pvalue = stats.ttest_ind(B, A)
-            # print(T_statistic,T_pvalue)
 
             ttest_col = ['_'.join([col_name, loc, col]) for col in base_ttest_col]
             proteins.loc[proteins['Protein Id'] == prot, ttest_col] = T_statistic, T_pvalue
-    # print(proteins)
     return proteins
 
 
@@ -501,7 +407,6 @@ def GliomaTransTtest(result_prefix=None, model_name=None, labels=None):
     proteinData = calProbStatistic(proteinData, normalData, labels, 'normal_')
     proteinData = calProbStatistic(proteinData, highGradeData, labels, 'highGrade_')
     proteinData = calProbStatistic(proteinData, lowGradeData, labels, 'lowGrade_')
-    # print(proteinData.columns)
 
     proteinData = Ttest(proteinData, normalData, highGradeData, labels, 'normal_highGrade')
     proteinData = Ttest(proteinData, normalData, lowGradeData, labels, 'normal_lowGrade')
@@ -523,7 +428,6 @@ def MelanomaTransTtest(result_prefix=None, model_name=None, labels=None):
     proteinData = calProbStatistic(proteinData, normalData, labels, 'normal_')
     proteinData = calProbStatistic(proteinData, NOSData, labels, 'NOS_')
     proteinData = calProbStatistic(proteinData, MetastaticSiteData, labels, 'MetastaticSite_')
-    # print(proteinData.columns)
 
     proteinData = Ttest(proteinData, normalData, NOSData, labels, 'normal_NOS')
     proteinData = Ttest(proteinData, normalData, MetastaticSiteData, labels, 'normal_MetastaticSite')
@@ -546,7 +450,6 @@ def SkinCancerTransTtest(result_prefix=None, model_name=None, labels=None):
     proteinData = calProbStatistic(proteinData, normalData, labels, 'normal_')
     proteinData = calProbStatistic(proteinData, BCCData, labels, 'BCC_')
     proteinData = calProbStatistic(proteinData, SCCData, labels, 'SCC_')
-    # print(proteinData.columns)
 
     proteinData = Ttest(proteinData, normalData, BCCData, labels, 'normal_BCC')
     proteinData = Ttest(proteinData, normalData, SCCData, labels, 'normal_SCC')
@@ -576,18 +479,12 @@ def filterCandidate(proteinData, df_A, df_B, labels, col1, col2, p_threshold=0.0
     significance = proteinData[['_'.join([col_name, loc, 'T_pvalue']) for loc in labels]] < p_threshold
     trans = proteinData[['_'.join([col_name, loc]) for loc in labels]] == False
     significance.columns = trans.columns
-    # print(significance & trans)
     data = proteinData[np.any(significance & trans, axis=1)]
-    # data = proteinData[np.all(significance, axis=1)]
-    # data = proteinData[np.any(significance, axis=1)]
-    # print(data)
-    # print(data.columns)
 
     data = data.reset_index()
     data = pd.merge(data, df_A, on=['Protein Name', 'Protein Id'], how='left')
     data = pd.merge(data, df_B, on=['Protein Name', 'Protein Id'], how='left')
     data = data.set_index('index')
-    # print(data)
 
     new_cols = ['Protein Name', 'Protein Id']
     new_cols += [col_name]
@@ -700,88 +597,24 @@ def candidateAnalysis(classifier_model, database, cancer_dir, p_threshold=0.01):
 
 
 
-# def sortCandidate(data, col_name, labels):
-#     data['min_T_pvalue'] = data[['_'.join([col_name, loc, 'T_pvalue']) for loc in labels]].min(axis=1)
-#     data = data.sort_values('min_T_pvalue')
-#     print(data)
-#     return data
-
-
-# def sortGliomaCandidate(result_prefix=None, model_name=None, labels=None):
-#     normal_pathology_candidate = pd.read_csv("{}/{}/preds/Glioma_normal_pathology_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     normal_highGrade_candidate = pd.read_csv("{}/{}/preds/Glioma_normal_highGrade_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     normal_lowGrade_candidate = pd.read_csv("{}/{}/preds/Glioma_normal_lowGrade_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     normal_Glioblastoma_candidate = pd.read_csv("{}/{}/preds/Glioma_normal_Glioblastoma_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     pathology_highGrade_candidate = pd.read_csv("{}/{}/preds/Glioma_pathology_highGrade_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     pathology_lowGrade_candidate = pd.read_csv("{}/{}/preds/Glioma_pathology_lowGrade_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     pathology_Glioblastoma_candidate = pd.read_csv("{}/{}/preds/Glioma_pathology_Glioblastoma_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     highGrade_lowGrade_candidate = pd.read_csv("{}/{}/preds/Glioma_highGrade_lowGrade_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     highGrade_Glioblastoma_candidate = pd.read_csv("{}/{}/preds/Glioma_highGrade_Glioblastoma_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-#     lowGrade_Glioblastoma_candidate = pd.read_csv("{}/{}/preds/Glioma_lowGrade_Glioblastoma_Candidate.csv".format(result_prefix, model_name), header=0, index_col=0)
-
-#     normal_pathology_candidate = sortCandidate(normal_pathology_candidate, 'normal_pathology', labels)
-#     normal_highGrade_candidate = sortCandidate(normal_highGrade_candidate, 'normal_highGrade', labels)
-#     normal_lowGrade_candidate = sortCandidate(normal_lowGrade_candidate, 'normal_lowGrade', labels)
-#     normal_Glioblastoma_candidate = sortCandidate(normal_Glioblastoma_candidate, 'normal_Glioblastoma', labels)
-#     pathology_highGrade_candidate = sortCandidate(pathology_highGrade_candidate, 'pathology_highGrade', labels)
-#     pathology_lowGrade_candidate = sortCandidate(pathology_lowGrade_candidate, 'pathology_lowGrade', labels)
-#     pathology_Glioblastoma_candidate = sortCandidate(pathology_Glioblastoma_candidate, 'pathology_Glioblastoma', labels)
-#     highGrade_lowGrade_candidate = sortCandidate(highGrade_lowGrade_candidate, 'highGrade_lowGrade', labels)
-#     highGrade_Glioblastoma_candidate = sortCandidate(highGrade_Glioblastoma_candidate, 'highGrade_Glioblastoma', labels)
-#     lowGrade_Glioblastoma_candidate = sortCandidate(lowGrade_Glioblastoma_candidate, 'lowGrade_Glioblastoma', labels)
-
-#     normal_pathology_candidate.to_csv("{}/{}/preds/Glioma_normal_pathology_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     normal_highGrade_candidate.to_csv("{}/{}/preds/Glioma_normal_highGrade_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     normal_lowGrade_candidate.to_csv("{}/{}/preds/Glioma_normal_lowGrade_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     normal_Glioblastoma_candidate.to_csv("{}/{}/preds/Glioma_normal_Glioblastoma_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     pathology_highGrade_candidate.to_csv("{}/{}/preds/Glioma_pathology_highGrade_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     pathology_lowGrade_candidate.to_csv("{}/{}/preds/Glioma_pathology_lowGrade_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     pathology_Glioblastoma_candidate.to_csv("{}/{}/preds/Glioma_pathology_Glioblastoma_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     highGrade_lowGrade_candidate.to_csv("{}/{}/preds/Glioma_highGrade_lowGrade_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     highGrade_Glioblastoma_candidate.to_csv("{}/{}/preds/Glioma_highGrade_Glioblastoma_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-#     lowGrade_Glioblastoma_candidate.to_csv("{}/{}/preds/Glioma_lowGrade_Glioblastoma_sortedCandidate.csv".format(result_prefix, model_name), index=True, mode='w')
-
-
-# def sortCandidateBiomarkers(classifier_model, database):
-#     args = parse_args()
-#     cfg = get_cfg()
-
-#     result_prefix = "{}/results/cancer/{}/independent".format(cfg.DATA.RESULT_DIR, database)
-#     labels = labelLists.get(database, cfg.CLASSIFIER.LOCATIONS)
-
-#     sortGliomaCandidate(result_prefix=result_prefix, model_name=classifier_model, labels=labels)
-#     sortMelanomaCandidate(result_prefix=result_prefix, model_name=classifier_model, labels=labels)
-#     sortSkinCancerCandidate(result_prefix=result_prefix, model_name=classifier_model, labels=labels)
-
 
 def main():
     """
     Main function to spawn the test process.
     """
-    # # classifier_model = "cct_modified56_mlce_ReWeight_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized_60epoch"
-    # classifier_model = "cct_modified56_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized_60epoch"
     classifier_model = "cct_modified72_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
-    # classifier_model = "cct_modified56_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
-    # database = "IHC-6854-7locations"
     database = "IHC"
-
-    # classifier_model = "cct_modified56_mlce_lr-000025_bn_drop-01_attn-drop-01_drop-path-01_batch12*10_seed6293_wd-005_aug_no-normalized"
-    # database = "IHC-10876-7locations"
-
-    # cancer_dir = "cancer-7locations"
     cancer_dir = "cancer"
-    # p_threshold = 1e-6, 5e-6, 1e-5, 5e-5, 1e-4, 2e-4, 5e-4, 8e-4, 1e-3, 2e-3, 5e-3, 1e-2, 5e-2
     p_threshold = 1e-4
 
-    # getPredictResult(classifier_model=classifier_model, database=database, cancer_dir=cancer_dir)
-    # if du.get_world_size() > 1:
-    #     dist.barrier()
+    getPredictResult(classifier_model=classifier_model, database=database, cancer_dir=cancer_dir)
+    if du.get_world_size() > 1:
+        dist.barrier()
 
     getProteinLevelResult(classifier_model=classifier_model, database=database, cancer_dir=cancer_dir, func="average", threshold=0.5)
     filterTranslocationProtein(classifier_model=classifier_model, database=database, cancer_dir=cancer_dir, func="average")
     transTtest(classifier_model=classifier_model, database=database, cancer_dir=cancer_dir)
     getCandidateBiomarkers(classifier_model=classifier_model, database=database, cancer_dir=cancer_dir, func="average", p_threshold=p_threshold)
-    # # sortCandidateBiomarkers(classifier_model=classifier_model, database=database, cancer_dir=cancer_dir)
     candidateAnalysis(classifier_model=classifier_model, database=database, cancer_dir=cancer_dir, p_threshold=p_threshold)
 
 

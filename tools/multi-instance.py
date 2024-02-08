@@ -9,6 +9,7 @@ import csv
 import numpy as np
 import pandas as pd
 
+from models.criterion import t_criterion
 from utils.args import parse_args
 from utils.config_defaults import get_cfg, labelLists, dir_prefixs
 from utils.eval_metrics import cal_metrics
@@ -78,6 +79,12 @@ def get_protein_level_result(resultPath, labels, func="max", csvWriter=None, spl
         for loc in locations_pred_labels:
             predProteinLabel.loc[ranked[loc] <= predProteinLabelNum, loc] = 1
             predProteinLabel.loc[ranked[loc] > predProteinLabelNum, loc] = 0
+    elif func == "average":
+        predProteinResult = groupData[locations_pred].mean()
+        predProteinLabel = predProteinResult.copy()
+        predProteinLabel.columns = locations_pred_labels
+        all_pred_labels = t_criterion(np.array(predProteinLabel), threshold)
+        predProteinLabel[locations_pred_labels] = all_pred_labels
     else:
         predProteinLabel = groupData[locations_pred_labels].max()
 
@@ -105,15 +112,12 @@ if __name__ == '__main__':
     args = parse_args()
     cfg = get_cfg()
 
-    # classifier_model = "cct_modified72_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
-    classifier_model = "cct_modified56_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
+    classifier_model = "cct_modified72_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
 
-    # for database in ["laceDNN", "GraphLoc"]:
     for database in cfg.DATA.DATASET_NAME:
         split_list = range(5)
         if database in ["IHC"]:
-            split_list = [-2] + list(range(5))
-            # split_list = [-2] + list(range(17))
+            split_list = [-2] + list(range(6))
         for split_num in split_list:
 
             if split_num == -2:
@@ -173,8 +177,7 @@ if __name__ == '__main__':
                             test_file_path = "%s_test_split%d.csv" % (path_prefix, split_num)
 
 
-                # for func in ["rank", "integrate"]:
-                for func in ["rank"]:
+                for func in ["average"]:
                     resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', train_file_path.split('/')[-1])
                     get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.5', split='train')
                     resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', val_file_path.split('/')[-1])
@@ -182,31 +185,6 @@ if __name__ == '__main__':
                     if not database in ["SIN-Locator"] and split_num != -2:
                         resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', test_file_path.split('/')[-1])
                         get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.5', split='test')
-                    # resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 'balanced9_t=0.9', train_file_path.split('/')[-1])
-                    # get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.9', split='train')
-                    # resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 'balanced9_t=0.9', val_file_path.split('/')[-1])
-                    # get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.9', split='val')
-                    # resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 'balanced9_t=0.9', test_file_path.split('/')[-1])
-                    # get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.9', split='test')
-
-
-                # # for func in ["rank", "integrate"]:
-                # for func in ["rank"]:
-                #     for t in [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]:
-                #     # resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', train_file_path.split('/')[-1])
-                #     # get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.5', split='train')
-                #     # resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', val_file_path.split('/')[-1])
-                #     # get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.5', split='val')
-                #     # resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', test_file_path.split('/')[-1])
-                #     # get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.5', split='test')
-                #         resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", "balanced8_t={}".format(t), train_file_path.split('/')[-1])
-                #         get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh="t={}".format(t), split='train')
-                #         resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", "balanced8_t={}".format(t), val_file_path.split('/')[-1])
-                #         get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh="t={}".format(t), split='val')
-                #         resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", "balanced8_t={}".format(t), test_file_path.split('/')[-1])
-                #         get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh="t={}".format(t), split='test')
-
-
 
 
             f.close()
