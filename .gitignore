@@ -1,0 +1,7 @@
+data/*
+!data/.gitkeep
+!data/cancer/.gitkeep
+logs/*
+!logs/.gitkeep
+results/*
+!results/.gitkeep
