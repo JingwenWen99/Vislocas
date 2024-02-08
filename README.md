@@ -23,3 +23,12 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
 |scikit-learn|1.1.2|
 |tensorboard|2.11.0|
 |adabelief-pytorch|0.2.0|
+## 2. Project Catalog Structure
+### 2.1 datasets
+> This folder stores the code files for data loading.
+        * ihc.py
+        > This file includes ihc data loading code.
+        * build.py
+        > This file includes building dataset code.
+        * loader.py
+        > This file includes constructing loader code.
