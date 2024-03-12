@@ -1,4 +1,6 @@
 ### This folder stores the optimiser, scheduler, checkpoint and other utilities code files.
+* args.py
+    > This file contains the argument parsing code
 * checkpoint.py
     > This file includes checkpoint code.
 * config_defaults.py
