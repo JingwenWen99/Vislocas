@@ -121,13 +121,17 @@ The following files should be placed directly in the `data/cancer` directory.
 ### 2.8 results
 > This folder is used to store the output models and prediction results.
 ## 3. How to run
-### (1) Download the data files to the data folder.
-### (2) Download the images from HPA. The download address of the images can be obtained from file tissueUrl.csv and pathologyUrl.csv.
-### (3) The program is written in Python 3.8.15 and to run the code we provide, so you need to install the environment.yml through inputting the following command in command line mode:
+### 1 Download the data files to the data folder.
+### 2 Download the images from HPA. The download address of the images can be obtained from file tissueUrl.csv and pathologyUrl.csv.
+### 3 The program is written in Python 3.8.15 and to run the code we provide, so you need to install the environment.yml through inputting the following command in command line mode:
 `conda env create -f environment.yml`
-### (4) Follow the steps below to generate the results of our paper.
-1. Run `python -m torch.distributed.launch --nproc_per_node=6 tools/train.py` in the terminal to train the Vislocas model.
-2. Run `python -m torch.distributed.launch --nproc_per_node=6 tools/test.py` in the terminal to test the Vislocas model.
-3. Run `python tools/multi-instance.py` in the terminal to aggregates the image-level results into protein-level results.
-4. Run `python tools/cal_metrics.py` in the terminal to calculates the performance metrics.
-5. Run `python -m torch.distributed.launch --nproc_per_node=6 tools/cancerTest.py` in the terminal to screen biomarkers of cancer subtypes.
+### 4 Follow the steps below to generate the results of our paper.
+1. Train the Vislocas model, and save trained model to ./results/IHC.
+   `sh train.sh`
+2. Predict subcellular location results for each image, and save the results to ./results/IHC.
+   `sh test.sh`
+3. Aggregates the image-level results into protein-level results and calculate the performance metrics of the model.
+   `sh cal_metrics.sh`
+   In the result file obtained, `statistic_crossValidation_Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized_metrics.csv` and `statistic_proteinLevel_crossValidation_Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized_metrics.csv` are the image level results and protein level results, respectively. 
+5. Predict mis-localization-related cancer subtype biomarker, and save the results to ./results/cancer.
+   `sh cancerTest.sh `
