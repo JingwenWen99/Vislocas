@@ -118,6 +118,7 @@ The following files should be placed directly in the `data/cancer` directory.
 > This folder is used to store the downloaded images.
 ## 3. How to run
 ### 1 Download the data files to the data folder.
+All benchmark data has been deposited at Zenode (<https://doi.org/10.5281/zenodo.10632698>) [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
 ### 2 Download the images from HPA. The download address of the images can be obtained from file tissueUrl.csv and pathologyUrl.csv.
 ### 3 The program is written in Python 3.8.15 and to run the code we provide, so you need to install the environment.yml through inputting the following command in command line mode:
 `conda env create -f environment.yml`
