@@ -9,8 +9,8 @@ np.random.seed(RNG_SEED)
 
 
 dataDir = "data/"
-imageDir = "G:/data/IHC/"
-imageDir2 = "H:/data/IHC/"
+imageDir = "dataset/IHC/"
+imageDir2 = "dataset/IHC/"
 locationList = ['cytoplasm', 'cytoskeleton', 'endoplasmic reticulum', 'golgi apparatus', 'lysosomes', 'mitochondria',
                 'nucleoli', 'nucleus', 'plasma membrane', 'vesicles']
 
@@ -620,7 +620,6 @@ def nucluesDataLabelAnalysisFile(filePath):
         print(len(newProteins))
 
     return result
-    # return [len(proteins)] + dataNum.tolist() + [len(data)] + data[locationList].sum().values.tolist() + [len(multiLabelData), len(multiLabelData) / len(data), len(multiLabelProteins), len(multiLabelProteins) / len(proteins), dataNum.sum(), dataNum.sum() / len(proteins), len(protein_label_cnt[protein_label_cnt.index.isin(protein_dif)]), len(protein_label_cnt[protein_label_cnt.index.isin(protein_dif)]) / len(proteins)]
 
 
 
@@ -657,65 +656,20 @@ if __name__ == '__main__':
     pathologyFilePath = dataDir + "pathologyUrl.csv"
     dataScreening(labeledSavePath, newLocationSavePath, pathologyFilePath)
 
-    # normalDataPath = dataDir + 'data_E2.csv'
-    # pathologyDataPath = dataDir + 'data_E3.csv'
-    # pretrainDatasetPartitioning(normalDataPath, pathologyDataPath)
-    # pretrainDataPath = dataDir + 'data_pretrain.csv'
-    # deleteWrongData(pretrainDataPath, pretrainDataPath)
-
     """ 6. 去除数据集中错误的数据（图片通道数为1） """
-    # dataPath = dataDir + "data_B.csv"
-    # deletedDataPath = dataDir + "data_B_deleted.csv"
-    # deleteWrongData(dataPath, deletedDataPath)
-
     dataPath = dataDir + "data1.csv"
     deletedDataPath = dataDir + "data1_deleted.csv"
     deleteWrongData(dataPath, deletedDataPath)
 
     """ 7. 数据集划分，在蛋白质水平上对数据进行训练集、验证集划分 """
-    # deletedDataPath = dataDir + "data_B_deleted.csv"
-    # datasetPartitioning(deletedDataPath)
-    # splitData()
-
     deletedDataPath = dataDir + "data1_deleted.csv"
     deletedDataPath = dataDir + "data1.csv"
     datasetPartitioning(deletedDataPath)
     splitData(deletedDataPath)
 
     splitOrgan(deletedDataPath)
-    # countData()
-
-    # reSampleData()
-
-
-    # print(dataDir + "data1_deleted.csv")
-    # showSplitedData(dataDir + "data1_deleted.csv")
-    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    # print(dataDir + 'data_train.csv')
-    # showSplitedData(dataDir + 'data_train.csv')
-    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    # print(dataDir + 'data_test.csv')
-    # showSplitedData(dataDir + 'data_test.csv')
-    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    # for i in range(10):
-    #     print(dataDir + "data_train_fold%d.csv" % i)
-    #     showSplitedData(dataDir + "data_train_fold%d.csv" % i)
-    #     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    #     print(dataDir + "data_val_fold%d.csv" % i)
-    #     showSplitedData(dataDir + "data_val_fold%d.csv" % i)
-    #     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
-    # dataLabelAnalysis()
-
-
-    # dataLabelAnalysisFile(dataDir + "normalLabeled.csv")
-    # dataLabelAnalysisFile(dataDir + "data1_deleted.csv")
-    # dataLabelAnalysisFile(dataDir + 'data_train.csv')
-    # dataLabelAnalysisFile(dataDir + 'data_test.csv')
 
     dataAnalysis()
 
-
-    # nucleusDataAnalysis()
 
 

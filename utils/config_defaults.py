@@ -18,7 +18,7 @@ _C.DATA = CfgNode()
 _C.DATA.DATASET = "IHC"
 _C.DATA.DATASET_NAME = ["IHC"]
 # _C.DATA.DATASET_NAME = ["IHC", "GraphLoc", "MSTLoc", "laceDNN"]
-_C.DATA.PATH_TO_DATA_DIR = "/root/autodl-tmp/dataset"
+_C.DATA.PATH_TO_DATA_DIR = "dataset"
 _C.DATA.RESULT_DIR = "."
 # _C.DATA.RESULT_DIR = "/root/autodl-tmp"
 

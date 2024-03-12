@@ -602,7 +602,7 @@ def main():
     """
     Main function to spawn the test process.
     """
-    classifier_model = "cct_modified72_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
+    classifier_model = "Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
     database = "IHC"
     cancer_dir = "cancer"
     p_threshold = 1e-4

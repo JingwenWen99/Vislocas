@@ -142,7 +142,8 @@ def val_epoch(cfg, device, val_loader, data_file, SAE, model, criterion=nn.BCEWi
     all_preds = torch.as_tensor(all_preds).to(device)
 
     world_size = du.get_world_size()
-    if world_size > 1:
+    # if world_size > 1:
+    if 1:
         # dist.barrier()
         if du.is_master_proc():
             gather_idxs = [torch.zeros_like(all_idxs) for _ in range(world_size)]
@@ -166,6 +167,7 @@ def val_epoch(cfg, device, val_loader, data_file, SAE, model, criterion=nn.BCEWi
             all_labels = all_labels[ind]
             all_preds = all_preds[ind]
 
+            print("evaluate")
             evaluate(cfg, all_idxs, all_labels, all_preds, data_file, model_name, result_prefix=result_prefix, log_prefix=log_prefix, metricsWriter=metricsWriter, cur_epoch=cur_epoch, get_threshold=False, threshold=0.5, multilabel=multilabel, prefix=prefix)
 
         else:
@@ -244,7 +246,8 @@ def test(cfg, device, test_loader, data_file, SAE, model, criterion=nn.BCEWithLo
 
     optimal_thres = threshold
     world_size = du.get_world_size()
-    if world_size > 1:
+    if 1:
+    # if world_size > 1:
         # dist.barrier()
         if du.is_master_proc():
             gather_idxs = [torch.zeros_like(all_idxs) for _ in range(world_size)]
@@ -323,7 +326,8 @@ def cancerTest(cfg, device, test_loader, data_file, SAE, model, model_name="ligh
     all_preds = torch.as_tensor(all_preds).to(device)
 
     world_size = du.get_world_size()
-    if world_size > 1:
+    if 1:
+    # if world_size > 1:
         if du.is_master_proc():
             gather_idxs = [torch.zeros_like(all_idxs) for _ in range(world_size)]
             gather_preds = [torch.zeros_like(all_preds) for _ in range(world_size)]

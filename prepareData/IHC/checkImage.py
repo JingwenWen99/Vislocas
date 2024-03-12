@@ -3,8 +3,8 @@ import os
 import csv
 
 dataDir = "data/"
-normalImageDir = "G:\\data\\IHC\\normal"
-pathologyImageDir = "G:\\data\\IHC\\pathology"
+normalImageDir = "dataset/IHC/normal"
+pathologyImageDir = "dataset/IHC/pathology"
 # imageDir = normalImageDir
 imageDir = pathologyImageDir
 
@@ -36,12 +36,10 @@ def readFromUrl(fileName):
 
 
 if __name__ == '__main__':
-    badImage = "D:\\VSCode\\ProteinLocalization\data\\bad.jpg"
+    badImage = "data/bad.jpg"
     sz = os.path.getsize(badImage)
 
     allData = readData(dataDir + file)
-    # allData = readFromUrl(dataDir + undownloadFile)
-    # allData = allData
 
     undownload = 0
     cnt = 0
@@ -51,7 +49,7 @@ if __name__ == '__main__':
 
     for item in allData:
 
-        path = '\\'.join([imageDir, item[0], item[3], item[2], item[1], item[4].split('/')[-1]])
+        path = '/'.join([imageDir, item[0], item[3], item[2], item[1], item[4].split('/')[-1]])
 
         if (not os.path.exists(path)) or (os.path.getsize(path) == sz):
             writer.writerow(item)

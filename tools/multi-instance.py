@@ -9,10 +9,10 @@ import csv
 import numpy as np
 import pandas as pd
 
-from models.criterion import t_criterion
 from utils.args import parse_args
 from utils.config_defaults import get_cfg, labelLists, dir_prefixs
 from utils.eval_metrics import cal_metrics
+from models.criterion import t_criterion
 
 
 organList = ["Brain", "Connective & soft tissue", "Female tissues", "Gastrointestinal tract", "Kidney & urinary bladder", "Skin"]
@@ -26,7 +26,7 @@ def get_protein_level_result(resultPath, labels, func="max", csvWriter=None, spl
 
 
     resultData['Label Num'] = resultData[locations_pred_labels].sum(axis=1)
-    groupData = resultData.groupby(['Protein Name', 'Protein Id'])
+    groupData = resultData.groupby(['Protein Name', 'Protein Id', 'Antibody Id'])
 
     print(groupData)
 
@@ -79,11 +79,11 @@ def get_protein_level_result(resultPath, labels, func="max", csvWriter=None, spl
         for loc in locations_pred_labels:
             predProteinLabel.loc[ranked[loc] <= predProteinLabelNum, loc] = 1
             predProteinLabel.loc[ranked[loc] > predProteinLabelNum, loc] = 0
-    elif func == "average":
+    elif func == "mean":
         predProteinResult = groupData[locations_pred].mean()
         predProteinLabel = predProteinResult.copy()
         predProteinLabel.columns = locations_pred_labels
-        all_pred_labels = t_criterion(np.array(predProteinLabel), threshold)
+        all_pred_labels = t_criterion(np.array(predProteinLabel[locations_pred_labels]), 0.5)
         predProteinLabel[locations_pred_labels] = all_pred_labels
     else:
         predProteinLabel = groupData[locations_pred_labels].max()
@@ -112,12 +112,12 @@ if __name__ == '__main__':
     args = parse_args()
     cfg = get_cfg()
 
-    classifier_model = "cct_modified72_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
+    classifier_model = "Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
 
     for database in cfg.DATA.DATASET_NAME:
         split_list = range(5)
         if database in ["IHC"]:
-            split_list = [-2] + list(range(6))
+            split_list = [-2] + list(range(5))
         for split_num in split_list:
 
             if split_num == -2:
@@ -177,7 +177,8 @@ if __name__ == '__main__':
                             test_file_path = "%s_test_split%d.csv" % (path_prefix, split_num)
 
 
-                for func in ["average"]:
+                # for func in ["rank", "integrate"]:
+                for func in ["mean"]:
                     resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', train_file_path.split('/')[-1])
                     get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.5', split='train')
                     resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', val_file_path.split('/')[-1])
@@ -185,6 +186,5 @@ if __name__ == '__main__':
                     if not database in ["SIN-Locator"] and split_num != -2:
                         resultPath = "{}/{}/preds/{}test_{}_aug0_{}".format(result_prefix, classifier_model, "", 't=0.5', test_file_path.split('/')[-1])
                         get_protein_level_result(resultPath, labels, func=func, csvWriter=csvWriter, split_num=split_num, fold=fold, thresh='t=0.5', split='test')
-
 
             f.close()

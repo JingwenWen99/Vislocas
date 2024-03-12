@@ -51,12 +51,12 @@ def main():
         print('use {} gpus!'.format(world_size))
 
 
-    classifier_model = "cct_modified72_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
+    classifier_model = "Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized"
 
     for database in cfg.DATA.DATASET_NAME:
         split_list = range(5)
         if database in ["IHC"]:
-            split_list = [-2, 0, 1, 2, 3, 4, 5]
+            split_list = [-2, 0, 1, 2, 3, 4]
         elif database in ["MSTLoc"]:
             split_list = [-2]
         for split_num in split_list:

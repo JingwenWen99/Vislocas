@@ -314,6 +314,7 @@ def evaluate(cfg, all_idxs, all_labels, all_preds, data_file, model_name, result
     predData[locations_pred_labels] = all_pred_labels
     predData = pd.merge(labeledData, predData, how='left', left_index=True, right_index=True)
 
+    print("{}/{}/preds".format(result_prefix, model_name))
     if not os.path.exists("{}/{}/preds".format(result_prefix, model_name)):
         os.makedirs("{}/{}/preds".format(result_prefix, model_name))
     if cur_epoch != -1:

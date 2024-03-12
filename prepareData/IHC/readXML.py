@@ -6,7 +6,6 @@ import time
 
 
 dataDir = "data/"
-imageDir = "E:/data/IHC/"
 
 def fast_iter(context, func):
     """

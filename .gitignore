@@ -5,3 +5,6 @@ logs/*
 !logs/.gitkeep
 results/*
 !results/.gitkeep
+dataset/*
+!dataset/.gitkeep
+!dataset/IHC/.gitkeep

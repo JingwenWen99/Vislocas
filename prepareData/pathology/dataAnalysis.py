@@ -8,15 +8,10 @@ RNG_SEED = 0
 np.random.seed(RNG_SEED)
 
 
-# dataDir = "data/"
-dataDir = "data/cancer-6029-5locations/"
-# cancerDir = "data/cancer/"
-# cancerDir = "data/cancer-6854-7locations/"
-# cancerDir = "data/cancer-10876-7locations/"
-# cancerDir = "data/cancer-7locations/"
-cancerDir = "data/cancer-6029-5locations/"
-imageDir = "G:/data/IHC/"
-imageDir2 = "H:/data/IHC/"
+dataDir = "data/"
+cancerDir = "data/cancer/"
+imageDir = "dataset/IHC/"
+imageDir2 = "dataset/IHC/"
 locationList = ['cytoplasm', 'cytoskeleton', 'endoplasmic reticulum', 'golgi apparatus', 'lysosomes', 'mitochondria',
                 'nucleoli', 'nucleus', 'plasma membrane', 'vesicles']
 
@@ -175,23 +170,6 @@ def screenData():
     print(normalData)
     print(pathologyData)
 
-    # normalData = normalData[normalData[locationList].sum(axis=1) > 0]
-    # normalData = normalData[(normalData['IF Verification'].isin(['enhanced', 'supported'])) &
-    #     normalData['Staining Level'].str.contains('high|medium|low')]
-    # pathologyData = pathologyData[pathologyData['Staining Level'].str.contains('High|Medium|low')]
-
-    # # data-6854-7locations
-    # normalData = normalData[normalData[locationList].sum(axis=1) > 0]
-    # normalData = normalData[normalData['Staining Level'].str.contains('high')]
-    # pathologyData = pathologyData[pathologyData['Staining Level'].str.contains('High')]
-
-    # # data-10876-7locations
-    # normalData = normalData[normalData[locationList].sum(axis=1) > 0]
-    # normalData = normalData[(normalData['Intensity Level'].str.contains('strong|moderate')) &
-    #     (normalData['Quantity'].str.contains(r'>75%'))]
-    # pathologyData = pathologyData[(pathologyData['Intensity Level'].str.contains('Strong|Moderate')) &
-    #     (pathologyData['Quantity'].str.contains(r'>75%'))]
-
     # data-6029
     normalData = normalData[normalData[locationList].sum(axis=1) > 0]
     normalData = normalData[(normalData['Intensity Level'].str.contains('strong')) &
@@ -206,11 +184,6 @@ def screenData():
     groups = pathologyData.groupby(by=['Protein Id', 'Tissue'])['Protein Name'].count()
     groups = groups[groups >= 3].reset_index()
     pathologyData = pd.merge(pathologyData.reset_index(), groups[['Protein Id', 'Tissue']], on=['Protein Id', 'Tissue'], how='right').set_index('index')
-
-
-    # groups = normalData.groupby(by=['Protein Id', 'Antibody Id', 'Tissue'])['Protein Name'].count()
-    # groups = groups[groups >= 3].reset_index()
-    # normalData = pd.merge(normalData, groups[['Protein Id', 'Antibody Id', 'Tissue']], on=['Protein Id', 'Antibody Id', 'Tissue'], how='right')
 
     normalProtein = normalData['Protein Id'].drop_duplicates()
     pathologyProtein = pathologyData['Protein Id'].drop_duplicates()
@@ -256,8 +229,8 @@ def genLymphomaData(normalFilePath, pathologyFilePath):
     print(subtypes)
     print(pathologyData[LymphomaSubtypes].sum())
 
-    # normalData.to_csv(cancerDir + "normalLymphoma.csv", index=True, mode='w')
-    # pathologyData.to_csv(cancerDir + "pathologyLymphoma.csv", index=True, mode='w')
+    normalData.to_csv(cancerDir + "normalLymphoma.csv", index=True, mode='w')
+    pathologyData.to_csv(cancerDir + "pathologyLymphoma.csv", index=True, mode='w')
 
 
 def genGliomaData(normalFilePath, pathologyFilePath):
@@ -853,11 +826,6 @@ def showSnomed(normalFilePath, pathologyFilePath):
     pathologyData = pd.read_csv(pathologyFilePath, header=0, index_col=0)
     print(pathologyData)
 
-    # tissueList = normalData['Tissue'].drop_duplicates().to_list()
-    # print(tissueList)
-    # cancerList = pathologyData['Tissue'].drop_duplicates().to_list()
-    # print(cancerList)
-
     analysisList = []
     for tissue in tissueList:
         tissueData = normalData[normalData['Tissue'] == tissue]
@@ -931,32 +899,6 @@ def dataScreening(normalFilePath, subtypeFilePath, normalSavePath, subtypeSavePa
     subtypeData = pd.read_csv(subtypeFilePath, header=0, index_col=0)
     print(subtypeData)
 
-    # normalData = normalData[
-    #     (normalData['Staining Level'].str.contains('high|medium|low')) &
-    #     (normalData['Intensity Level'].str.contains('strong|moderate|weak')) &
-    #     (normalData['Quantity'].str.contains(r'>75%|75%-25%|<25%'))
-    # ]
-
-    # subtypeData = subtypeData[
-    #     (subtypeData['Staining Level'].str.contains('High|Medium|Low')) &
-    #     (subtypeData['Intensity Level'].str.contains('Strong|Moderate|Weak')) &
-    #     (subtypeData['Quantity'].str.contains(r'>75%|75%-25%|<25%'))
-    # ]
-
-    # normalData = normalData[
-    #     (normalData['Staining Level'].str.contains('high|medium')) &
-    #     (normalData['Quantity'].str.contains(r'>75%'))
-    # ]
-
-    # subtypeData = subtypeData[
-    #     (subtypeData['Staining Level'].str.contains('High|Medium')) &
-    #     (subtypeData['Quantity'].str.contains(r'>75%'))
-    # ]
-
-    # normalData = normalData[(normalData['Staining Level'].str.contains('high'))]
-
-    # subtypeData = subtypeData[(subtypeData['Staining Level'].str.contains('High'))]
-
     normalData = normalData[
         (normalData['Staining Level'].str.contains('high')) &
         (normalData['Quantity'].str.contains(r'>75%'))
@@ -995,53 +937,12 @@ def dataSplit(normalFilePath, subtypeFilePath):
 
 
 if __name__ == '__main__':
-    # pathologyFilePath = dataDir + "pathologyUrl.csv"
-    # cancerAnalysis(pathologyFilePath)
 
-    # pathologyFilePath = dataDir + "pathologyUrl.csv"
-    # normalFilePath = dataDir + "normalWithAnnotation.csv"
-    # # showSnomed(normalFilePath, pathologyFilePath)
-    # tissueListFilePath = dataDir + "tissueList.csv"
-    # showTissue(normalFilePath, pathologyFilePath, tissueListFilePath)
-
-    # getDetectedData()
-
-    # # # deleteWrongData(dataDir + "detectedNormalData.csv", dataDir + "deleted_detectedNormalData.csv", condition="normal")
-    # # # deleteWrongData(dataDir + "detectedPathologyData.csv", dataDir + "deleted_detectedPathologyData.csv", condition="pathology")
-
-
-    # screenData()
+    getDetectedData()
+    screenData()
 
     normalFilePath = cancerDir + "screenedNormalData.csv"
     pathologyFilePath = cancerDir + "screenedPathologyData.csv"
+    pathologyAnalysis(cancerDir + "screenedPathologyData.csv")
+
     genData(normalFilePath, pathologyFilePath)
-
-    # cancerAnalysis(cancerDir + "screenedNormalData.csv")
-    # pathologyAnalysis(cancerDir + "screenedPathologyData.csv")
-
-    # PathologyData = pd.read_csv(cancerDir + "screenedPathologyData.csv", header=0, index_col=0)
-    # cancerAnalysis = pathologyAnalysis(PathologyData)
-    # cancerAnalysis.to_csv(dataDir + "Analysis.csv", index=True, mode='w')
-
-
-
-    # pathologyFilePath = dataDir + "pathologyUrl.csv"
-    # subtypesFilePath = dataDir + "subtypesAllData.csv"
-    # subtypesAnalysis(pathologyFilePath, subtypesFilePath)
-
-    # normalFilePath = dataDir + "normalLabeled.csv"
-    # # normalFilePath = dataDir + "normalWithAnnotation.csv"
-    # subtypesFilePath = dataDir + "subtypesAllData.csv"
-    # normalSavePath = dataDir + "subtypesNormal.csv"
-    # subtypeSavePath = dataDir + "subtypesPathology.csv"
-    # dataMatch(normalFilePath, subtypesFilePath, normalSavePath, subtypeSavePath)
-
-    # normalSavePath = dataDir + "subtypesNormal.csv"
-    # subtypeSavePath = dataDir + "subtypesPathology.csv"
-    # screenedNormalPath = dataDir + "screenedNormal.csv"
-    # screenedSubtypePath = dataDir + "screenedPathology.csv"
-    # dataScreening(normalSavePath, subtypeSavePath, screenedNormalPath, screenedSubtypePath)
-
-    # screenedNormalPath = dataDir + "screenedNormal.csv"
-    # screenedSubtypePath = dataDir + "screenedPathology.csv"
-    # dataSplit(screenedNormalPath, screenedSubtypePath)

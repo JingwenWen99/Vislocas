@@ -10,8 +10,8 @@ import os
 
 
 dataDir = "data/"
-normalImageDir = "G:/data/IHC/normal/"
-pathologyImageDir = "G:/data/IHC/pathology/"
+normalImageDir = "dataset/IHC/normal/"
+pathologyImageDir = "dataset/IHC/pathology/"
 imageDir = normalImageDir
 # imageDir = pathologyImageDir
 
@@ -28,19 +28,11 @@ badUrl = normalBadUrl
 normalUndownloadFile = "normal_undownload.csv"
 pathologyUndownloadFile = "pathology_undownload.csv"
 undownloadFile = normalUndownloadFile
-# undownloadFile = pathologyUndownloadFile
-
-# tissueHeader = ['Protein Name', 'Protein Id', 'Antibody Id', 'Reliability Verification',
-#         'Tissue', 'Organ', 'Cell Type', 'Staining Level', 'Intensity Level', 'Quantity', 'Location',
-#         'Sex', 'Age', 'Patient Id', 'SnomedParameters', 'URL']
-
-# pathologyHeader = ['Protein Name', 'Protein Id', 'Antibody Id', 'Tissue', 'Organ', 'Cell Type',
-#     'Sex', 'Age', 'Patient Id', 'Staining Level', 'Intensity Level', 'Quantity', 'Location', 'SnomedParameters', 'URL']
 
 
 def readData(fileName):
     data = pd.read_csv(fileName, header=0)
-    data = data[['Protein Id', 'Antibody Id', 'Tissue', 'Organ', 'URL']][6000000:].sample(frac=1).values.tolist()
+    data = data[['Protein Id', 'Antibody Id', 'Tissue', 'Organ', 'URL']].sample(frac=1).values.tolist()
     return data
 
 
@@ -73,11 +65,9 @@ ip = ['http://120.26.37.240:8000', 'http://114.55.84.12:30001', 'http://112.86.1
 
 async def fetch(session,url):
     for _ in range(random.randint(10, 15)):
-    # for _ in range(20):
         await asyncio.sleep(0.02 + random.random() * _)
         try:
             response = await session.get(url, timeout=aiohttp.ClientTimeout(total=10), proxy=random.choice(ip), ssl=False)
-            # response = await session.get(url)
             if response.status == 200:
                 return await response.read()
         except:
@@ -92,7 +82,6 @@ async def saveImage(session, data):
     root = imageDir + proteinId + "/" + organ + "/" + tissue + "/" + antibodyId + "/"
     path = root + url.split('/')[-1]
 
-    # await asyncio.sleep(random.random() * 100)
     r = await fetch(session, url)
     if r is None:
         lock.acquire()
@@ -115,50 +104,27 @@ async def saveImage(session, data):
     print("运行时间:%s秒" % (T2 - T1))
 
 
-# async def task(loop, data):
 async def task(data):
-    # timeout = aiohttp.ClientTimeout(total=60)
-    # conn = aiohttp.TCPConnector(ssl=False, limit=5, limit_per_host=30)
     conn = aiohttp.TCPConnector(ssl=False, limit=1000)
-    # conn = aiohttp.TCPConnector(ssl=False)
     async with aiohttp.ClientSession(connector=conn) as session:
-    # async with aiohttp.ClientSession(timeout=timeout, connector=conn) as session:
-    # async with aiohttp.ClientSession() as session:
-        # tasks = [loop.create_task(saveImage(session, item)) for item in data]
         tasks = [asyncio.create_task(saveImage(session, item)) for item in data]
         await asyncio.wait(tasks)
-    # session.close()
-    # return session
     await asyncio.sleep(1)
 
 
 def start(data):
     asyncio.run(task(data))
-    # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(asyncio.sleep(0.1))
-    # loop.run_until_complete(task(loop, data))
-    # # session = loop.run_until_complete(task(loop, data))
-    # # loop.run_until_complete(session.close())
-    # loop.run_until_complete(asyncio.sleep(0.1))
-    # # loop.close()
 
 
 if __name__ == '__main__':
     T1 = time.time()
     l = Lock()
 
-    # data = readData(dataDir + file)
-    # data = readFromUrl(dataDir + undownloadFile)
-    data = readFromUrl(dataDir + "normal_bad_url0.csv")
-    # data = readFromUrl(dataDir + "pathology_undownload1.csv")
-    # data = data[:5]
-
-    # init_lock(l)
-    # start(data)
+    data = readData(dataDir + file)
 
     N = 1
-    # step = 200
-    step = int(len(data) / N) + 1
+    step = 200
+    # step = int(len(data) / N) + 1
     data = [data[i: i + step] for i in range(0, len(data), step)]
     P = Pool(processes = N, initializer=init_lock, initargs=(l, ))
     P.map(func=start, iterable=data)
