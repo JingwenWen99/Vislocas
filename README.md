@@ -40,12 +40,6 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
   > This folder stores the code files used to analyse, process and download the IHC data. 
 + pathology
   > This folder stores the code files used to analyse, process and download the pathology data. 
-+ GraphLoc
-  > This folder stores the code files used to analyse, process and download the GraphLoc benchmarking dataset. 
-+ MSTLoc
-  > This folder stores the code files used to analyse, process and download the MSTLoc benchmarking dataset. 
-+ laceDNN
-  > This folder stores the code files used to analyse, process and download the laceDNN benchmarking dataset. 
 ### 2.3 data
 > Download and save the data annotation information to this folder.  
 > All benchmark data has been deposited at Zenode (<https://doi.org/10.5281/zenodo.10632698>) [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
@@ -120,6 +114,8 @@ The following files should be placed directly in the `data/cancer` directory.
 > This folder is used to store the output log messages.
 ### 2.8 results
 > This folder is used to store the output models and prediction results.
+### 2.9 dataset
+> This folder is used to store the downloaded images.
 ## 3. How to run
 ### 1 Download the data files to the data folder.
 ### 2 Download the images from HPA. The download address of the images can be obtained from file tissueUrl.csv and pathologyUrl.csv.
