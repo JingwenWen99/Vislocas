@@ -121,8 +121,11 @@ The following files should be placed directly in the `data/cancer` directory.
 ### 2.8 results
 > This folder is used to store the output models and prediction results.
 ## 3. How to run
-The program is written in Python 3.8.15 and to run the code we provide, you need to install the environment.yml through inputting the following command in command line mode:
+### (1) Download the data files to the data folder.
+### (2) Download the images from HPA. The download address of the images can be obtained from file tissueUrl.csv and pathologyUrl.csv.
+### (3) The program is written in Python 3.8.15 and to run the code we provide, so you need to install the environment.yml through inputting the following command in command line mode:
 `conda env create -f environment.yml`
+### (4) Follow the steps below to generate the results of our paper.
 1. Run `python -m torch.distributed.launch --nproc_per_node=6 tools/train.py` in the terminal to train the Vislocas model.
 2. Run `python -m torch.distributed.launch --nproc_per_node=6 tools/test.py` in the terminal to test the Vislocas model.
 3. Run `python tools/multi-instance.py` in the terminal to aggregates the image-level results into protein-level results.
