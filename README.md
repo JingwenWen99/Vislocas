@@ -119,16 +119,18 @@ The following files should be placed directly in the `data/cancer` directory.
 ## 3. How to run
 ### 1. Download the data files to the data folder.
 All benchmark data has been deposited at Zenode (<https://doi.org/10.5281/zenodo.10632698>) [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
-### 2. Download the images from HPA. The download address of the images can be obtained from file tissueUrl.csv and pathologyUrl.csv.
-### 3. The program is written in Python 3.8.15 and to run the code we provide, so you need to install the environment.yml through inputting the following command in command line mode:
+### 2. Download the images from HPA. 
+The download address of the images can be obtained from file `tissueUrl.csv` and `pathologyUrl.csv`.
+### 3. Install the environment.
+The program is written in Python 3.8.15 and to run the code we provide, so you need to install the `environment.yml` through inputting the following command in command line mode:<br>
 `conda env create -f environment.yml`
 ### 4. Follow the steps below to generate the results of our paper.
-1. Train the Vislocas model, and save trained model to ./results/IHC.<br>
+1. Train the Vislocas model, and save trained model to `./results/IHC`.<br>
 `sh train.sh`
-3. Predict subcellular location results for each image, and save the results to ./results/IHC.<br>
+3. Predict subcellular location results for each image, and save the results to `./results/IHC`.<br>
 `sh test.sh`
 3. Aggregates the image-level results into protein-level results and calculate the performance metrics of the model.<br>
 `sh cal_metrics.sh`<br>
-    > In the result files obtained, **`statistic_crossValidation_Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized_metrics.csv`** and **`statistic_proteinLevel_crossValidation_Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized_metrics.csv`** are the image level results and protein level results, respectively. 
-4. Predict mis-localization-related cancer subtype biomarker, and save the results to ./results/cancer.<br>
+    > In the result files obtained, `statistic_crossValidation_Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized_metrics.csv` and `statistic_proteinLevel_crossValidation_Vislocas_mlce_lr-000005_bn_drop-01_attn-drop-01_drop-path-01_batch12_seed6293_wd-005_aug_no-normalized_metrics.csv` are the image level results and protein level results, respectively. 
+4. Predict mis-localization-related cancer subtype biomarker, and save the results to `./results/cancer`.<br>
 `sh cancerTest.sh `
