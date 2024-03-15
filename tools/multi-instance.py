@@ -26,7 +26,7 @@ def get_protein_level_result(resultPath, labels, func="max", csvWriter=None, spl
 
 
     resultData['Label Num'] = resultData[locations_pred_labels].sum(axis=1)
-    groupData = resultData.groupby(['Protein Name', 'Protein Id', 'Antibody Id'])
+    groupData = resultData.groupby(['Protein Name', 'Protein Id'])
 
     print(groupData)
 
