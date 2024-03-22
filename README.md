@@ -42,8 +42,8 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
   > This folder stores the code files used to analyse, process and download the pathology data. 
 ### 2.3 data
 > Download and save the data annotation information to this folder.  
-> All benchmark data has been deposited at Zenode (<https://doi.org/10.5281/zenodo.10632698>) [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
-
+> All benchmark data has been deposited at Zenodo (<https://doi.org/10.5281/zenodo.10632698>) [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
+o
 The following files should be placed directly in the `data` directory.  
 |File|Descriptrion|
 |----|----|
@@ -118,7 +118,7 @@ The following files should be placed directly in the `data/cancer` directory.
 > This folder is used to store the downloaded images.
 ## 3. How to run
 ### 1. Download the data files to the data folder.
-All benchmark data has been deposited at Zenode (<https://doi.org/10.5281/zenodo.10632698>) [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
+All benchmark data has been deposited at Zenodo (<https://doi.org/10.5281/zenodo.10632698>) [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
 ### 2. Download the images from HPA. 
 The download address of the images can be obtained from file `tissueUrl.csv` and `pathologyUrl.csv`.
 ### 3. Install the environment.
