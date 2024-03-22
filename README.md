@@ -43,7 +43,7 @@ In this work, we developed Vislocas, which identifies potential protein mis-loca
 ### 2.3 data
 > Download and save the data annotation information to this folder.  
 > All benchmark data has been deposited at Zenodo (<https://doi.org/10.5281/zenodo.10632698>) [![DOI](<https://zenodo.org/badge/DOI/10.5281/zenodo.10632698.svg>)](<https://doi.org/10.5281/zenodo.10632698>)
-o
+
 The following files should be placed directly in the `data` directory.  
 |File|Descriptrion|
 |----|----|
